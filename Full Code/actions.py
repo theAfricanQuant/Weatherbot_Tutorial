@@ -13,10 +13,10 @@ class ActionWeather(Action):
 		from apixu.client import ApixuClient
 		api_key = '...' #your apixu key
 		client = ApixuClient(api_key)
-		
+
 		loc = tracker.get_slot('location')
 		current = client.getcurrent(q=loc)
-		
+
 		country = current['location']['country']
 		city = current['location']['name']
 		condition = current['current']['condition']['text']
@@ -24,8 +24,8 @@ class ActionWeather(Action):
 		humidity = current['current']['humidity']
 		wind_mph = current['current']['wind_mph']
 
-		response = """It is currently {} in {} at the moment. The temperature is {} degrees, the humidity is {}% and the wind speed is {} mph.""".format(condition, city, temperature_c, humidity, wind_mph)
-						
+		response = f"""It is currently {condition} in {city} at the moment. The temperature is {temperature_c} degrees, the humidity is {humidity}% and the wind speed is {wind_mph} mph."""
+
 		dispatcher.utter_message(response)
 		return [SlotSet('location',loc)]
 

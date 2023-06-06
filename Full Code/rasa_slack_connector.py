@@ -41,16 +41,16 @@ class SlackInput(HttpInputComponent):
 	def blueprint(self, on_new_message):
 		from flask import Flask, request, Response
 		slack_webhook = Blueprint('slack_webhook', __name__)
-		
+
 		@slack_webhook.route('/', methods = ['GET'])
 		def health():
 			return jsonify({'status':'ok'})
-			
+
 		@slack_webhook.route('/slack/events', methods = ['POST'])
 		def event():
 			if request.json.get('type') == 'url_verification':
 				return request.json.get('challenge'), 200
-				
+
 			if request.json.get('token') == self.slack_client and request.json.get('type') == 'event_callback':
 				data = request.json
 				messaging_events = data.get('event')
@@ -58,11 +58,11 @@ class SlackInput(HttpInputComponent):
 				user = messaging_events.get('user')
 				text = messaging_events.get('text')
 				bot = messaging_events.get('bot_id')
-				if bot == None:
+				if bot is None:
 					on_new_message(UserMessage(text, SlackBot(self.slack_verification_token, channel)))
-					
+
 			return Response(), 200
-			
+
 		return slack_webhook
 				
 		
